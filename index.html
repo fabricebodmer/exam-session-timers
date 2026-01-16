@@ -242,6 +242,7 @@ points:
         document.getElementById('currentClock').textContent = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     }
 
+    /*
     function switchTab(tabId) {
         ongletActif = tabId;
         document.querySelectorAll('.tab-content, .tab-btn, .settings-section').forEach(el => el.classList.remove('active'));
@@ -252,6 +253,31 @@ points:
         document.getElementById('settingsPanel').classList.toggle('collapsed', isCollapsed);
         sauvegarderDonnees();
     }
+    */
+
+    function switchTab(tabId) {
+        ongletActif = tabId;
+        
+        // 1. Gestion des classes actives
+        document.querySelectorAll('.tab-content, .tab-btn, .settings-section').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.getElementById('btn-' + (tabId === 'instructions' ? 'instructions' : 'temps')).classList.add('active');
+        document.getElementById('settings-' + tabId).classList.add('active');
+
+        // 2. Logique d'affichage automatique du panneau de réglages
+        if (tabId === 'temps' && listeDurees.length === 0) {
+            // Force l'ouverture si on va dans "Durées" et qu'il n'y en a aucune
+            settingsCollapsedTemps = false;
+        }
+
+        // 3. Application de l'état (ouvert/fermé)
+        const isCollapsed = (tabId === 'instructions') ? settingsCollapsedInstructions : settingsCollapsedTemps;
+        document.getElementById('settingsPanel').classList.toggle('collapsed', isCollapsed);
+        
+        sauvegarderDonnees();
+    }
+
+
 
     function toggleSettings() {
         if (ongletActif === 'instructions') settingsCollapsedInstructions = !settingsCollapsedInstructions;
